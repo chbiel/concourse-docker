@@ -3,8 +3,6 @@ jobs:
   - name: add-file-to-output
     plan:
       - task: create-one-output
-        output_mapping:
-          the-output: demo-disk
         config:
           platform: linux
           image_resource:
@@ -39,12 +37,16 @@ jobs:
                 ls -lah
                 date > ./the-output/file2
       - task: read-ouput-from-previous-step
+        output_mapping:
+          the-output: demo-disk
         config:
           platform: linux
           image_resource:
             type: registry-image
             source: { repository: busybox }
           inputs:
+            - name: the-output
+          outputs:
             - name: the-output
           run:
             path: /bin/sh
